@@ -1,10 +1,9 @@
-import { OpenAPITransformerNS } from "~/types"
+import { OpenApiTransformerNS } from "~/types"
 import copyMeta from "../utils/copy-meta"
 import convertComposite from "./convert-composite"
 import maybeRef from "./maybe-ref"
 
-export default function convertSchema(sourceSchema: OpenAPITransformerNS.AnyConvertedSchema, ctx: OpenAPITransformerNS.BuildContext, pathSchemaName?: string): any {
-  /*  --- object --- */
+export default function convertSchema(sourceSchema: OpenApiTransformerNS.AnyConvertedSchema, ctx: OpenApiTransformerNS.BuildContext, pathSchemaName?: string): any {
   if (sourceSchema.type === "object") {
     const out: any = { type: "object" }
     if (sourceSchema.loose) out.additionalProperties = true
@@ -22,7 +21,6 @@ export default function convertSchema(sourceSchema: OpenAPITransformerNS.AnyConv
     return maybeRef(sourceSchema, out, ctx, pathSchemaName)
   }
 
-  /*  --- array / tuple --- */
   if (sourceSchema.type === "array") {
     const out: any = { type: "array" }
 
@@ -46,7 +44,6 @@ export default function convertSchema(sourceSchema: OpenAPITransformerNS.AnyConv
     return maybeRef(sourceSchema, out, ctx, pathSchemaName)
   }
 
-  /*  --- primitives & composites --- */
   switch (sourceSchema.type) {
     case "string":
       return {

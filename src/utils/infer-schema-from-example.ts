@@ -1,7 +1,7 @@
-import { OpenAPITransformerNS } from "~/types"
+import { OpenApiTransformerNS } from "~/types"
 import recursiveParseObjectProperties from "./recursive-parse-object-properties"
 
-export default function inferSchemaFromExample(value: any): OpenAPITransformerNS.AnyConvertedSchema {
+export default function inferSchemaFromExample(value: any): OpenApiTransformerNS.AnyConvertedSchema {
   if (typeof value === "string") return { type: "string" }
   if (typeof value === "number") return { type: "number" }
   if (typeof value === "boolean") return { type: "boolean" }

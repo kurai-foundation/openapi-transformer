@@ -1,11 +1,11 @@
 import crypto from "crypto"
-import { OpenAPITransformerNS } from "~/types"
+import { OpenApiTransformerNS } from "~/types"
 import generateAutoName from "../utils/generate-auto-name"
 
 export default function maybeRef(
-  instance: OpenAPITransformerNS.AbstractException | OpenAPITransformerNS.AbstractSigilResponse | OpenAPITransformerNS.AnyConvertedSchema,
-  schemaObj: OpenAPITransformerNS.AnyConvertedSchema,
-  ctx: OpenAPITransformerNS.BuildContext,
+  instance: OpenApiTransformerNS.AbstractException | OpenApiTransformerNS.AbstractSigilResponse | OpenApiTransformerNS.AnyConvertedSchema,
+  schemaObj: OpenApiTransformerNS.AnyConvertedSchema,
+  ctx: OpenApiTransformerNS.BuildContext,
   pathSchemaName?: string,
   example?: any
 ) {

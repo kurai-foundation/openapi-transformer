@@ -1,4 +1,4 @@
-import { OpenAPITransformerNS } from "~/types"
+import { OpenApiTransformerNS } from "~/types"
 import { sanitizePath } from "~/utils/sanitize-path"
 import buildResponses from "./build-responses"
 import convertObjectParams from "./convert-object-params"
@@ -8,8 +8,8 @@ interface IBuildOperationOptions {
   meta?: Record<string, any>
   path?: string
   tags: string[]
-  schema: OpenAPITransformerNS.FlatRequestSchema,
-  ctx: OpenAPITransformerNS.BuildContext,
+  schema: OpenApiTransformerNS.FlatRequestSchema,
+  ctx: OpenApiTransformerNS.BuildContext,
 }
 
 export default function buildOperation({ meta, path, tags, schema, ctx }: IBuildOperationOptions) {

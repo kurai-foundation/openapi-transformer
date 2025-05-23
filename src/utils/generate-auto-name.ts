@@ -1,7 +1,7 @@
 import crypto from "crypto"
-import { OpenAPITransformerNS } from "~/types"
+import { OpenApiTransformerNS } from "~/types"
 
-export default function generateAutoName(ctx: OpenAPITransformerNS.BuildContext, pathSchemaName?: string) {
+export default function generateAutoName(ctx: OpenApiTransformerNS.BuildContext, pathSchemaName?: string) {
   switch (ctx.options.schemaNameStrategy) {
     case "increment":
       return `UnnamedSchema${ ++ctx.anonCount }`

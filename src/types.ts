@@ -1,4 +1,34 @@
-export namespace OpenAPITransformerNS {
+export interface OpenApiServerDescriptor {
+  url: string
+  description?: string
+  variables?: Record<string, any>
+}
+
+export interface OpenApiTransformerTransformOptions {
+  extractSchemas?: "none" | "named" | "all";
+  schemaNameStrategy?: "hash" | "path" | "increment";
+  statusTextOverrides?: Record<number, string>;
+}
+
+export interface OpenApiTransformerInfoOptions {
+  title: string
+  description: string
+  servers: OpenApiServerDescriptor[]
+
+  termsOfService: string
+  contact: Partial<{
+    name: string
+    url: string
+    email: string
+  }>
+  license: {
+    name: string
+    url?: string
+  }
+  version: string
+}
+
+export namespace OpenApiTransformerNS {
   export abstract class AbstractException {
     public abstract code: number
     public abstract name: string
@@ -18,38 +48,8 @@ export namespace OpenAPITransformerNS {
     content: string | Buffer
   }
 
-  export interface TransformOptions {
-    extractSchemas?: "none" | "named" | "all";
-    schemaNameStrategy?: "hash" | "path" | "increment";
-    statusTextOverrides?: Record<number, string>;
-  }
-
-  export interface ISwaggerServer {
-    url: string
-    description?: string
-    variables?: Record<string, any>
-  }
-
-  export interface Details {
-    title: string
-    description: string
-    servers: ISwaggerServer[]
-
-    termsOfService: string
-    contact: Partial<{
-      name: string
-      url: string
-      email: string
-    }>
-    license: {
-      name: string
-      url?: string
-    }
-    version: string
-  }
-
   export type BuildContext = {
-    options: Required<Omit<OpenAPITransformerNS.TransformOptions, "responseTemplate">> & { responseTemplate: any },
+    options: Required<Omit<OpenApiTransformerTransformOptions, "responseTemplate">> & { responseTemplate: any },
     anonCount: number,
     byHash: Map<string, string>
     components: { schemas: Record<string, any> }

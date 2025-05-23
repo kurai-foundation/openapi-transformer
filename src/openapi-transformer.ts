@@ -1,19 +1,19 @@
 import buildOperation from "./executors/build-operation"
-import { OpenAPITransformerNS } from "./types"
+import { OpenApiServerDescriptor, OpenApiTransformerInfoOptions, OpenApiTransformerNS, OpenApiTransformerTransformOptions } from "./types"
 import colonToBraces from "./utils/colon-to-braces"
 
-interface OpenAPIDocumentOptions extends Partial<OpenAPITransformerNS.Details> {
-  responseTemplate: OpenAPITransformerNS.ResponseTemplateCallback
-  transform?: OpenAPITransformerNS.TransformOptions
+export interface OpenApiTransformerOptions extends Partial<OpenApiTransformerInfoOptions> {
+  responseTemplate: OpenApiTransformerNS.ResponseTemplateCallback
+  transform?: OpenApiTransformerTransformOptions
 }
 
 export default class OpenApiTransformer {
-  private readonly servers: OpenAPITransformerNS.ISwaggerServer[]
-  private readonly transformOptions?: OpenAPITransformerNS.TransformOptions
-  private readonly responseTemplate: OpenAPITransformerNS.ResponseTemplateCallback
+  private readonly servers: OpenApiServerDescriptor[]
+  private readonly transformOptions?: OpenApiTransformerTransformOptions
+  private readonly responseTemplate: OpenApiTransformerNS.ResponseTemplateCallback
   private readonly info: Record<string, any>
 
-  constructor(options: OpenAPIDocumentOptions) {
+  constructor(options: OpenApiTransformerOptions) {
     const { servers, transform, responseTemplate, ..._details } = options ?? {}
 
     this.servers = servers || [{
@@ -34,7 +34,7 @@ export default class OpenApiTransformer {
     }, _details)
   }
 
-  public transform(routes: OpenAPITransformerNS.ExportedRouteDetails[]) {
+  public transform(routes: OpenApiTransformerNS.ExportedRouteDetails[]) {
     const ctx = {
       options: {
         extractSchemas: "named",

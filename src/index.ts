@@ -1,5 +1,9 @@
+import { OpenApiServerDescriptor, OpenApiTransformerInfoOptions, OpenApiTransformerTransformOptions } from "~/types"
 import OpenApiTransformer from "./openapi-transformer"
 
 export {
-  OpenApiTransformer
+  OpenApiTransformer,
+  type OpenApiTransformerInfoOptions,
+  type OpenApiTransformerTransformOptions,
+  type OpenApiServerDescriptor
 }

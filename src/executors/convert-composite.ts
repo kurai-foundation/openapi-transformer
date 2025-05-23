@@ -1,7 +1,7 @@
-import { OpenAPITransformerNS } from "~/types"
+import { OpenApiTransformerNS } from "~/types"
 import convertSchema from "./convert-schema"
 
-export default function convertComposite(sourceSchema: OpenAPITransformerNS.AnyConvertedSchema, ctx: OpenAPITransformerNS.BuildContext, path?: string) {
+export default function convertComposite(sourceSchema: OpenApiTransformerNS.AnyConvertedSchema, ctx: OpenApiTransformerNS.BuildContext, path?: string) {
   switch (sourceSchema.type) {
     case "oneOf":
       return { oneOf: sourceSchema.oneOf.map((v: any) => convertSchema(v, ctx, path)) }

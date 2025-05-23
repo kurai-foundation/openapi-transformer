@@ -1,14 +1,12 @@
-import { OpenAPITransformerNS } from "~/types"
+import { OpenApiTransformerNS } from "~/types"
 import convertSchema from "./convert-schema"
 
-export default function convertObjectParams(objSchema: OpenAPITransformerNS.AnyConvertedSchema, place: "path" | "query" | "header", ctx: OpenAPITransformerNS.BuildContext) {
+export default function convertObjectParams(objSchema: OpenApiTransformerNS.AnyConvertedSchema, place: "path" | "query" | "header", ctx: OpenApiTransformerNS.BuildContext) {
   const params: any[] = []
   const schema = objSchema.shape
 
-  //const required: string[] = []
   for (const key in schema) {
     const field = schema[key]
-    //if (!field.optional) required.push(key)
 
     params.push({
       name: key,
