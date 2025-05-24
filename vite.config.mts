@@ -1,8 +1,8 @@
+import { builtinModules } from "node:module"
 import * as path from "node:path"
 import { defineConfig } from "vite"
-import tsconfigPaths from "vite-tsconfig-paths"
 import dts from "vite-plugin-dts"
-import { builtinModules } from "node:module"
+import tsconfigPaths from "vite-tsconfig-paths"
 
 export default defineConfig({
   publicDir: false,
@@ -21,14 +21,16 @@ export default defineConfig({
       entry: {
         "openapi-transformer": path.resolve(__dirname, "src/index.ts"),
       },
-      name: "seal",
+      name: "openapi-transformer",
       formats: ["es", "cjs"]
     },
     rollupOptions: {
-      external: [...builtinModules, "joi", "express", "cors"],
-      output: { exports: "named" }
+      external: [...builtinModules],
+      output: { exports: "named", preserveModules: true, interop: "auto" }
     },
-    commonjsOptions: { transformMixedEsModules: true },
+    commonjsOptions: {
+      transformMixedEsModules: true
+    },
     ssr: true
   }
 })
