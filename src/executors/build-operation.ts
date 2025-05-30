@@ -18,6 +18,8 @@ export default function buildOperation({ meta, path, tags, schema, ctx }: IBuild
   if (meta?.deprecated) op.deprecated = true
   if (meta?.description) op.description = meta.description
   if (meta?.externalDocs) op.externalDocs = meta.externalDocs
+  if (meta?.summary) op.summary = meta.summary
+
   if (tags) op.tags = tags
 
   op.parameters = []

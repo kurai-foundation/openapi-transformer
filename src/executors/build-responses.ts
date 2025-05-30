@@ -18,12 +18,11 @@ export default function buildResponses(items: any, ctx: OpenApiTransformerNS.Bui
     const instance = typeof item === "function" ? new (item as any)() : item
 
     if ("code" in instance) {
-      const { headers, code, content } = ctx.options.responseTemplate(
-        instance instanceof OpenApiTransformerNS.AbstractException ? null : instance,
-        instance instanceof OpenApiTransformerNS.AbstractException ? instance : null
-      )
+      const { headers, code, content } = ctx.options.responseTemplate(instance)
 
-      const example = typeof content === "string" ? JSON.parse(content) ?? "Response content" : "Buffer"
+      const _content = (instance as any).__$raw === true ? (instance.content ? JSON.stringify(instance.content) : content) : content
+
+      const example = typeof _content === "string" ? JSON.parse(_content) ?? "Response content" : "Buffer"
 
       if ("__$schemaName" in instance && instance) (instance as any).name = instance.__$schemaName
       res[code] = {
@@ -33,7 +32,7 @@ export default function buildResponses(items: any, ctx: OpenApiTransformerNS.Bui
           "application/json": {
             schema: maybeRef(
               instance,
-              inferSchemaFromExample(JSON.parse(content)),
+              inferSchemaFromExample(JSON.parse(_content)),
               ctx,
               path ? `${ sanitizePath(path) }_Response` : undefined,
               example
