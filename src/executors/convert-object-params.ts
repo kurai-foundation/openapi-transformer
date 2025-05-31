@@ -10,10 +10,9 @@ export default function convertObjectParams(objSchema: OpenApiTransformerNS.AnyC
 
     if (
       place === "header"
-      && key.toLowerCase() === "authorization"
       && Object.values(ctx.components.securitySchemes || {}).some(v => (
         v.type === "http"
-        || (v.type === "apiKey" && v.name.toLowerCase() === "authorization" && v.in === "header")
+        || (v.type === "apiKey" && v.name.toLowerCase() === key.toLowerCase() && v.in === "header")
       ))
     ) continue
 
