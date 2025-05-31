@@ -8,6 +8,15 @@ export default function convertObjectParams(objSchema: OpenApiTransformerNS.AnyC
   for (const key in schema) {
     const field = schema[key]
 
+    if (
+      place === "header"
+      && key.toLowerCase() === "authorization"
+      && Object.values(ctx.components.securitySchemes || {}).some(v => (
+        v.type === "http"
+        || (v.type === "apiKey" && v.name.toLowerCase() === "authorization" && v.in === "header")
+      ))
+    ) continue
+
     params.push({
       name: key,
       in: place,

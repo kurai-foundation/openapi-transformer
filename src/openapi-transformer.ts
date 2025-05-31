@@ -1,6 +1,14 @@
+import normalizeSecuritySchemas from "~/utils/normalize-security-schemas"
 import buildOperation from "./executors/build-operation"
-import { OpenApiServerDescriptor, OpenApiTransformerInfoOptions, OpenApiTransformerNS, OpenApiTransformerTransformOptions } from "./types"
+import {
+  OpenApiServerDescriptor,
+  OpenApiTransformerInfoOptions,
+  OpenApiTransformerNS,
+  OpenApiTransformerTransformOptions,
+  SecuritySchemaDescriptor
+} from "./types"
 import colonToBraces from "./utils/colon-to-braces"
+import BuildContext = OpenApiTransformerNS.BuildContext
 
 export interface OpenApiTransformerOptions extends Partial<OpenApiTransformerInfoOptions> {
   responseTemplate: OpenApiTransformerNS.ResponseTemplateCallback
@@ -12,9 +20,11 @@ export default class OpenApiTransformer {
   private readonly transformOptions?: OpenApiTransformerTransformOptions
   private readonly responseTemplate: OpenApiTransformerNS.ResponseTemplateCallback
   private readonly info: Record<string, any>
+  private readonly securitySchemas?: Record<string, SecuritySchemaDescriptor>
+  private readonly security?: Record<string, string[]>[]
 
   constructor(options: OpenApiTransformerOptions) {
-    const { servers, transform, responseTemplate, ..._details } = options ?? {}
+    const { servers, transform, responseTemplate, securitySchemas, security, ..._details } = options ?? {}
 
     this.servers = servers || [{
       url: "{scheme}://{host}:{port}",
@@ -30,12 +40,14 @@ export default class OpenApiTransformer {
     this.info = Object.assign({
       title: "API documentation",
       version: "1.0.0",
-      description: "This API documentation was automatically generated using Sigil OpenAPI transformer"
+      description: "This API documentation was automatically generated using Sigil OpenAPI transformer",
     }, _details)
+    if (securitySchemas) this.securitySchemas = securitySchemas
+    if (security) this.security = normalizeSecuritySchemas(security)
   }
 
   public transform(routes: OpenApiTransformerNS.ExportedRouteDetails[]) {
-    const ctx = {
+    const ctx: BuildContext = {
       options: {
         extractSchemas: "named",
         nameStrategy: "path",
@@ -44,8 +56,13 @@ export default class OpenApiTransformer {
       },
       anonCount: 0,
       byHash: new Map<string, string>(),
-      components: { schemas: {} }
+      components: {
+        schemas: {},
+        responses: {}
+      }
     }
+
+    if (this.securitySchemas) ctx.components.securitySchemes = this.securitySchemas
 
     const o: any = {
       openapi: "3.0.3",
@@ -54,6 +71,8 @@ export default class OpenApiTransformer {
       paths: {},
       components: ctx.components
     }
+
+    if (this.security) o.security = this.security
 
     for (const route of routes) {
       const oasPath = colonToBraces(route.path)

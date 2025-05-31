@@ -1,4 +1,5 @@
 import { OpenApiTransformerNS } from "~/types"
+import normalizeSecuritySchemas from "~/utils/normalize-security-schemas"
 import { sanitizePath } from "~/utils/sanitize-path"
 import buildResponses from "./build-responses"
 import convertObjectParams from "./convert-object-params"
@@ -19,6 +20,12 @@ export default function buildOperation({ meta, path, tags, schema, ctx }: IBuild
   if (meta?.description) op.description = meta.description
   if (meta?.externalDocs) op.externalDocs = meta.externalDocs
   if (meta?.summary) op.summary = meta.summary
+  if (meta?.security !== undefined) {
+    if (meta.security === null) {
+      op.security = []
+    }
+    else op.security = normalizeSecuritySchemas(meta.security)
+  }
 
   if (tags) op.tags = tags
 

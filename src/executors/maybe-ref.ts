@@ -7,18 +7,22 @@ export default function maybeRef(
   schemaObj: OpenApiTransformerNS.AnyConvertedSchema,
   ctx: OpenApiTransformerNS.BuildContext,
   pathSchemaName?: string,
-  example?: any
+  example?: any,
 ) {
   const { extractSchemas } = ctx.options
 
   if (extractSchemas === "none") return schemaObj
 
   if ("name" in instance && typeof instance.name === "string") {
-    const name = instance.name
+    const name = instance.__$name || instance.name
+    const description = instance.__$description
+    const headers = instance.__$headers
 
     if (!ctx.options.extractSchemas || ctx.options.extractSchemas) {
       ctx.components.schemas[name] = schemaObj
 
+      if (description) ctx.components.schemas[name].description = description
+      if (headers) ctx.components.schemas[name].headers = headers
       if (example) ctx.components.schemas[name].example = example
     }
 

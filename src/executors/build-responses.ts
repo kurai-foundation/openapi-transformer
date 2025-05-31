@@ -20,13 +20,13 @@ export default function buildResponses(items: any, ctx: OpenApiTransformerNS.Bui
     if ("code" in instance) {
       const { headers, code, content } = ctx.options.responseTemplate(instance)
 
-      const _content = (instance as any).__$raw === true ? (instance.content ? JSON.stringify(instance.content) : content) : content
+      const _content = instance.__$raw === true ? (instance.content ? JSON.stringify(instance.content) : content) : content
 
       const example = typeof _content === "string" ? JSON.parse(_content) ?? "Response content" : "Buffer"
 
-      if ("__$schemaName" in instance && instance) (instance as any).name = instance.__$schemaName
-      res[code] = {
-        description: "message" in instance ? instance.message : statusText[code] ?? "",
+      if ("__$schemaName" in instance && instance) instance.name = instance.__$schemaName
+      const responseContent = {
+        description: instance.__$description || ("message" in instance ? instance.message : statusText[code] ?? ""),
         headers: transformHeaders(headers),
         content: {
           "application/json": {
@@ -40,6 +40,12 @@ export default function buildResponses(items: any, ctx: OpenApiTransformerNS.Bui
           }
         }
       }
+
+      if (instance.name) {
+        ctx.components.responses[instance.name] = responseContent
+        res[code] = { $ref: `#/components/responses/${ instance.name }` }
+      }
+      else res[code] = responseContent
     }
   }
 
