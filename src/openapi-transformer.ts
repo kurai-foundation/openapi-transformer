@@ -75,6 +75,14 @@ export default class OpenApiTransformer {
     if (this.security) o.security = this.security
 
     for (const route of routes) {
+      if (this.transformOptions?.ignoreRoutes) {
+        if (Array.isArray(this.transformOptions.ignoreRoutes)) {
+          if (this.transformOptions.ignoreRoutes.some(pt => (
+            typeof pt === "string" ? (route.path.startsWith(pt) || route.path === pt) : (pt.test(route.path))
+          ))) continue
+        } else if (this.transformOptions.ignoreRoutes(route.path)) continue
+      }
+
       const oasPath = colonToBraces(route.path)
       if (!o.paths[oasPath]) o.paths[oasPath] = {}
       o.paths[oasPath][route.method.toLowerCase()] = buildOperation({

@@ -5,9 +5,10 @@ export interface OpenApiServerDescriptor {
 }
 
 export interface OpenApiTransformerTransformOptions {
-  extractSchemas?: "none" | "named" | "all";
-  schemaNameStrategy?: "hash" | "path" | "increment";
-  statusTextOverrides?: Record<number, string>;
+  extractSchemas?: "none" | "named" | "all"
+  schemaNameStrategy?: "hash" | "path" | "increment"
+  statusTextOverrides?: Record<number, string>
+  ignoreRoutes?: (string | RegExp)[] | ((path: string) => boolean)
 }
 
 type SecurityOAuthFlows = {
